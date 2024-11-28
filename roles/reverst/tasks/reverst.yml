@@ -1,0 +1,46 @@
+---
+- name: Src folder
+  delegate_to: localhost
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - ./src
+    - ./src/reverst
+
+- name: Fetch git source
+  delegate_to: localhost
+  ansible.builtin.git:
+    repo: https://github.com/flipt-io/reverst.git
+    dest: ./src/reverst
+    version: "{{ reverst_version }}"
+
+- name: Build reverst client
+  delegate_to: localhost
+  ansible.builtin.command:
+    chdir: ./src/reverst
+    cmd: go install ./client/...
+
+- name: Build reverstd server
+  delegate_to: localhost
+  environment:
+    GOOS: linux
+    GOARCH: "{{ reverts_archi }}"
+  ansible.builtin.command:
+    chdir: ./src/reverst
+    cmd: go build ./cmd/reverstd
+
+- name: Reverst folder
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /opt
+    - /opt/reverst
+    - /opt/reverst/{{ reverst_version }}
+
+- name: Deploy binary
+  ansible.builtin.copy:
+    src: ../../src/reverst/reverstd
+    dest: /opt/reverst/{{ reverst_version }}/reverstd
+    mode: "0775"

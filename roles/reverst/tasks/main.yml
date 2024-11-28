@@ -1,0 +1,5 @@
+---
+
+- name: Reverst
+  ansible.builtin.import_tasks:
+    file: roles/reverst/tasks/reverst.yml

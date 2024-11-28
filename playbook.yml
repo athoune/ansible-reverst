@@ -1,0 +1,7 @@
+---
+- name: Reverst
+  hosts: reverstd
+  roles:
+    - name: reverst
+      role: reverst
+      tags: reverst

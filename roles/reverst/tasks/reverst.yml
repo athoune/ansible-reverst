@@ -85,3 +85,11 @@
     - ca.pem
     - server.pem
     - server-key.pem
+
+- name: Config
+  ansible.builtin.template:
+    src: reverst/env.j2
+    dest: /etc/reverst/env
+    owner: root
+    group: reverst
+    mode: "0640"

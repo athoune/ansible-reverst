@@ -1,5 +1,6 @@
 all: certs/ca-key.pem certs/server-key.pem certs/client-key.pem
 
+PATH=../../go/bin/
 #
 # Certs
 #
@@ -8,23 +9,23 @@ certs:
 	mkdir -p certs
 
 certs/ca-key.pem: certs
-	cfssl gencert -initca ca.json | cfssljson -bare certs/ca
+	$(PATH)cfssl gencert -initca ca.json | $(PATH)cfssljson -bare certs/ca
 
 certs/server-key.pem: certs
-	cfssl gencert \
+	$(PATH)cfssl gencert \
 		-ca=certs/ca.pem \
 		-ca-key=certs/ca-key.pem \
 		-config=ca-config.json \
 		-profile=server \
-		server.json | cfssljson -bare certs/server
+		server.json | $(PATH)cfssljson -bare certs/server
 
 certs/client-key.pem: certs
-	cfssl gencert \
+	$(PATH)cfssl gencert \
 		-ca=certs/ca.pem \
 		-ca-key=certs/ca-key.pem \
 		-config=ca-config.json \
 		-profile=client \
-		client.json | cfssljson -bare certs/client
+		client.json | $(PATH)cfssljson -bare certs/client
 
 #
 # Clean

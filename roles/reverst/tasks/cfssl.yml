@@ -37,3 +37,9 @@
   loop:
     - Makefile
     - ca-config.json
+
+- name: Make all the SSL stuff
+  delegate_to: localhost
+  ansible.builtin.command:
+    cmd: make
+    chdir: secrets/{{ inventory_hostname }}/

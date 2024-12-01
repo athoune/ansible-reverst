@@ -17,9 +17,17 @@
 
 - name: Build reverst client
   delegate_to: localhost
+  environment:
+    GOPATH: "{{ playbook_dir }}/go"
   ansible.builtin.command:
+    creates: "{{ playbook_dir }}/go/bin/reverst"
     chdir: ./src/reverst
     cmd: go install ./client/...
+
+- name: User
+  ansible.builtin.user:
+    name: reverst
+    system: true
 
 - name: Build reverstd server
   delegate_to: localhost
@@ -43,4 +51,15 @@
   ansible.builtin.copy:
     src: ../../src/reverst/reverstd
     dest: /opt/reverst/{{ reverst_version }}/reverstd
-    mode: "0775"
+    mode: "0750"
+    owner: root
+    group: reverst
+
+- name: Link current version
+  ansible.builtin.file:
+    state: link
+    src: /opt/reverst/{{ reverst_version }}/reverstd
+    dest: /usr/local/bin/reverstd
+    owner: root
+    group: root
+    mode: "0755"

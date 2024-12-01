@@ -1,4 +1,15 @@
 ---
+- name: Build cfssl
+  delegate_to: localhost
+  environment:
+    GOPATH: "{{ playbook_dir }}/go"
+  ansible.builtin.command:
+    creates: "{{ playbook_dir }}/go/bin/{{ item }}"
+    cmd: go install github.com/cloudflare/cfssl/cmd/{{ item }}@{{ cfssl_version }}
+  loop:
+    - cfssl
+    - cfssljson
+
 - name: Secrets
   delegate_to: localhost
   ansible.builtin.file:

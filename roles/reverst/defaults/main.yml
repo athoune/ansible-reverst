@@ -1,4 +1,9 @@
 ---
 reverst_archi: amd64
 reverst_version: v0.2.0
+reverst_if: eth0
+reverst_ip_version: 4
+reverst_port: 4807
+reverst_server_name: foo
+
 cfssl_version: v1.6.5

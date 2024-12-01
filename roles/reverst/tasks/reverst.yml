@@ -63,3 +63,25 @@
     owner: root
     group: root
     mode: "0755"
+
+# Config
+
+- name: Etc folder
+  ansible.builtin.file:
+    path: /etc/reverst
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: SSL stuff
+  ansible.builtin.copy:
+    src: ../../secrets/{{ inventory_hostname }}/certs/{{ item }}
+    dest: /etc/reverst/
+    owner: root
+    group: reverst
+    mode: "0640"
+  loop:
+    - ca.pem
+    - server.pem
+    - server-key.pem

@@ -3,6 +3,18 @@ Revest playbook
 
 Deploy with [Ansible](https://docs.ansible.com/ansible/latest/index.html) the [Reverts](https://github.com/flipt-io/reverst) proxy, and enjoy upside down connection to share HTTP services behind a NAT.
 
+Tools
+-----
+
+You must have golang installed localy.
+
+Tools, **reverst** and **cfssl** are installed in `./go/bin/` folder.
+
+Secrets
+-------
+
+Secrets, SSL stuffs and password are stored in `./secrets/{{ inventory_hostname }}/` folder.
+
 Inventory
 ---------
 

@@ -9,5 +9,10 @@ groups:
     authentication:
       basic:
         username: "{{ group }}"
-        password: "prout"
+        password: "{{
+            lookup( 'password',
+            'secrets/' + inventory_hostname +
+            '/group-' + group + '.secret' )
+          }}"
+
   {% endfor %}

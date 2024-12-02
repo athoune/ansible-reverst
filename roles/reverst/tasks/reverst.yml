@@ -86,7 +86,7 @@
     - server.pem
     - server-key.pem
 
-- name: Configs
+- name: Reverst configs
   ansible.builtin.template:
     src: reverst/{{ item }}.j2
     dest: /etc/reverst/{{ item }}

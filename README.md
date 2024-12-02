@@ -27,9 +27,18 @@ reverstd:
   hosts:
     proxy.example.com: # your consenting server
       reverts_archi: arm64 # maybe amd64 ?
-      reverts_server_name: tunnel.example.com # this name is used for TLS auth, it can be a fake hostname, outside DNS
-      reverst_http_port: 8087 # exposed port on the server. It should be behind a proxy with LetsEncrypt
+      # The name is used for TLS auth, it can be a fake hostname,
+      # outside DNS
+      reverts_server_name: tunnel.example.com
+      # Exposed port on the server. It should be behind
+      # a proxy with LetsEncrypt
+      reverst_http_port: 8087
       reverst_groups:
-        tunnel.example.com: # you can have more than one group
-          - tunnel.example.com # a group can handles multiple hosts
+        # You can have different group with distinct auth
+        tunnel.example.com:
+          # The proxy use virtual hosting.
+          # The HTTP 'Host' header is mandatory,
+          # for local debug use something like this :
+          # curl -v -H "Host: tunnel.exemple.com" http://localhost:8181
+          - tunnel.example.com
 ```

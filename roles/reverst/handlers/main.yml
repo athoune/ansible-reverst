@@ -1,0 +1,5 @@
+---
+- name: Restart reverstd
+  ansible.builtin.service:
+    name: reverstd
+    state: restarted

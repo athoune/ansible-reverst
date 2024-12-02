@@ -1,0 +1,20 @@
+[Unit]
+Description=Reverstd
+Documentation=https://github.com/flipt-io/reverst
+After=network.target network-online.target
+Requires=network-online.target
+
+[Service]
+Type=exec
+User=reverst
+Group=reverst
+ExecStart=/usr/local/bin/reverstd --log debug
+TimeoutStopSec=5s
+LimitNOFILE=1048576
+PrivateTmp=true
+ProtectSystem=full
+WorkingDirectory=/etc/reverst
+EnvironmentFile=/etc/reverst/env
+
+[Install]
+WantedBy=multi-user.target

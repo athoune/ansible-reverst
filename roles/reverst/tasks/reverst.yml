@@ -54,6 +54,7 @@
     mode: "0750"
     owner: root
     group: reverst
+  notify: Restart reverstd
 
 - name: Link current version
   ansible.builtin.file:
@@ -63,6 +64,7 @@
     owner: root
     group: root
     mode: "0755"
+  notify: Restart reverstd
 
 # Config
 
@@ -85,6 +87,7 @@
     - ca.pem
     - server.pem
     - server-key.pem
+  notify: Restart reverstd
 
 - name: Reverst configs
   ansible.builtin.template:
@@ -96,6 +99,7 @@
   loop:
     - env
     - groups.yml
+  notify: Restart reverstd
 
 - name: Env tool
   ansible.builtin.copy:
@@ -104,3 +108,28 @@
     owner: root
     group: reverst
     mode: "0750"
+
+# https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes
+- name: Sysctl UDP
+  ansible.posix.sysctl:
+    name: "{{ item }}"
+    value: "7500000"
+    state: present
+  loop:
+    - net.core.rmem_max
+    - net.core.wmem_max
+
+- name: Reverstd service
+  ansible.builtin.copy:
+    src: reverst/reverstd.service
+    dest: /lib/systemd/system/reverstd.service
+    owner: root
+    group: root
+    mode: "0644"
+  register: reverstd_service
+
+- name: Reverstd systemd
+  ansible.builtin.systemd_service:
+    name: reverstd
+    daemon_reload: "{{ reverstd_service.changed | ternary('true', 'false') }}"
+    state: started

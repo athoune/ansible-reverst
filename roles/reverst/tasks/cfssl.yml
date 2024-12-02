@@ -26,8 +26,19 @@
     dest: secrets/{{ inventory_hostname }}/{{ item }}
   loop:
     - ca.json
-    - client.json
-    - server.json
+
+- name: Server config
+  delegate_to: localhost
+  ansible.builtin.template:
+    src: cfssl/server.json.j2
+    dest: secrets/{{ inventory_hostname }}/server.json
+
+- name: Makefile config
+  delegate_to: localhost
+  ansible.builtin.template:
+    src: "cfssl/Makefile.j2"
+    dest: secrets/{{ inventory_hostname }}/Makefile
+  loop: "{{ reverst_groups.keys() }}"
 
 - name: Static configs
   delegate_to: localhost
@@ -35,7 +46,6 @@
     src: cfssl/{{ item }}
     dest: secrets/{{ inventory_hostname }}/
   loop:
-    - Makefile
     - ca-config.json
 
 - name: Make all the SSL stuff

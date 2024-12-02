@@ -1,0 +1,13 @@
+groups:
+  {% for group, hostnames in reverst_groups.items() -%}
+  {{ group }}:
+    hosts:
+      {% for hostname in hostnames -%}
+      - {{ hostname }} # Host for routing inbound HTTP requests to tunnel group
+      {% endfor %}
+
+    authentication:
+      basic:
+        username: "{{ group }}"
+        password: "prout"
+  {% endfor %}

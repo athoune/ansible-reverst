@@ -15,14 +15,14 @@
     dest: ./src/reverst
     version: "{{ reverst_version }}"
 
-- name: Build reverst client
+- name: Build local reverst
   delegate_to: localhost
   environment:
     GOPATH: "{{ playbook_dir }}/go"
   ansible.builtin.command:
     creates: "{{ playbook_dir }}/go/bin/reverst"
     chdir: ./src/reverst
-    cmd: go install ./client/...
+    cmd: go install ./cmd/...
 
 - name: User
   ansible.builtin.user:
@@ -77,7 +77,7 @@
 - name: SSL stuff
   ansible.builtin.copy:
     src: ../../secrets/{{ inventory_hostname }}/certs/{{ item }}
-    dest: /etc/reverst/
+    dest: /etc/reverst/{{ item }}
     owner: root
     group: reverst
     mode: "0640"
@@ -86,10 +86,21 @@
     - server.pem
     - server-key.pem
 
-- name: Config
+- name: Configs
   ansible.builtin.template:
-    src: reverst/env.j2
-    dest: /etc/reverst/env
+    src: reverst/{{ item }}.j2
+    dest: /etc/reverst/{{ item }}
     owner: root
     group: reverst
     mode: "0640"
+  loop:
+    - env
+    - groups.yml
+
+- name: Env tool
+  ansible.builtin.copy:
+    src: reverst/env.sh
+    dest: /etc/reverst/
+    owner: root
+    group: reverst
+    mode: "0750"

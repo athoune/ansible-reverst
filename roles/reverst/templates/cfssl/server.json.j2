@@ -1,17 +1,17 @@
 {
-    "CN": "server.example.com",
+    "CN": "{{ reverts_server_name }}",
     "hosts": [
-        "server.example.com"
+        "{{ reverts_server_name }}"
     ],
     "key": {
-        "algo": "rsa",
-        "size": 2048
+        "algo": "ecdsa",
+        "size": 521
     },
     "names": [
         {
             "C": "FR",
             "L": "Montcuq",
-            "O": "{{ inventory_hostname }}",
+            "O": "{{ (inventory_hostname | split('.'))[-2] }}",
             "OU": "OPSEC"
         }
     ]
